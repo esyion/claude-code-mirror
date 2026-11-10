@@ -1,0 +1,13 @@
+name = "claude-code-mirror"
+main = "index.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+# ← GitHub 公开仓库 (必须是 public, 否则 Release 资产下载需要鉴权)
+GH_REPO = "esyion/claude-code-mirror"
+BRANCH = "main"
+
+# 可选: 绑定自己的 Cloudflare 域名 (替代默认的 *.workers.dev)
+# routes = [
+#   { pattern = "mirror.example.com", custom_domain = true },
+# ]

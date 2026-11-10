@@ -1,0 +1,26 @@
+name: mirror-sync
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # UTC, 每 6 小时; GitHub 定时任务可能有几分钟到更久的排队延迟
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mirror-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync Claude Code releases to GitHub Releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RETENTION: "8"        # 保留最近 8 个版本 (每版本约 2.3GB, 8 版本约 18GB)
+        run: python3 gh_sync.py
