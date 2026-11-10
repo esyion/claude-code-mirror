@@ -3,7 +3,12 @@ name: mirror-sync
 on:
   schedule:
     - cron: "17 */6 * * *"   # UTC, 每 6 小时; GitHub 定时任务可能有几分钟到更久的排队延迟
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      backfill:
+        description: "本次最多补齐的缺失版本数 (全量历史补齐填 999)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -15,12 +20,13 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 300    # 常规运行 5~10 分钟; 大批量补齐时按 5 小时上限分批跑
     steps:
       - uses: actions/checkout@v4
 
       - name: Sync Claude Code releases to GitHub Releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RETENTION: "8"        # 保留最近 8 个版本 (每版本约 2.3GB, 8 版本约 18GB)
+          RETENTION: "8"      # 保留最近 8 个版本; "0" = 永久保留全部 (每版本约 2.3GB)
+          BACKFILL: ${{ github.event.inputs.backfill || '4' }}
         run: python3 gh_sync.py
