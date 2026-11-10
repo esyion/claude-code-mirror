@@ -197,6 +197,13 @@ def main():
             log(f"{v}: FAILED {e}")
 
     update_channels(latest, stable)
+
+    # Releases 页面的 "Latest" 徽标跟随 latest 频道 (仅展示用途, Worker 不依赖它)
+    try:
+        gh("release", "edit", latest, "--latest")
+    except Exception as e:
+        log(f"mark latest badge: {e}")
+
     prune(latest, stable)
 
     if failures:
