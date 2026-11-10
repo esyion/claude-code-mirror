@@ -27,6 +27,6 @@ jobs:
       - name: Sync Claude Code releases to GitHub Releases
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RETENTION: "8"      # 保留最近 8 个版本; "0" = 永久保留全部 (每版本约 2.3GB)
+          RETENTION: "30"      # 保留最近 8 个版本; "0" = 永久保留全部 (每版本约 2.3GB)
           BACKFILL: ${{ github.event.inputs.backfill || '4' }}
         run: python3 gh_sync.py
