@@ -6,7 +6,7 @@
 # ============================================================
 set -euo pipefail
 
-MIRROR="https://mirror.example.com"
+MIRROR="https://claude-code-mirror.qingbo-my.workers.dev"
 DOWNLOAD_BASE_URL="$MIRROR/claude-code-releases"
 TARGET="${1:-latest}"
 

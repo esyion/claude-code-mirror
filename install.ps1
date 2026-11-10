@@ -13,7 +13,7 @@ $ProgressPreference = 'SilentlyContinue'
 #  把 $MIRROR 改成你自己的 Cloudflare 域名即可
 #  用法: irm https://<你的域名>/install.ps1 | iex
 # ============================================================
-$MIRROR = "https://mirror.example.com"
+$MIRROR = "https://claude-code-mirror.qingbo-my.workers.dev"
 $DOWNLOAD_BASE_URL = "$MIRROR/claude-code-releases"
 
 # Check for 32-bit Windows
