@@ -29,7 +29,7 @@ Cloudflare Worker 提供自有域名**。对外 URL 结构与官方
 ```
 
 > 为什么不让 Worker 直接搬运二进制？Worker 单实例 128MB 内存上限，且 GitHub 资产
-> 上传接口对流式无 Content-Length 的请求支持差；Actions 拉取+上传是原生能力，
+> 上传接口对流式无 Content-Length 的请求支持差。Actions 拉取+上传是原生能力，
 > Worker 只做流式转发内存恒定，各干各擅长的事。
 
 ## 仓库结构
@@ -42,7 +42,7 @@ Cloudflare Worker 提供自有域名**。对外 URL 结构与官方
 └── worker/                      # CF Worker (wrangler deploy)
 ```
 
-git 仓库本体始终 <1MB——290MB 的二进制走 Release 资产，不进 git 历史、不用 LFS。
+git 仓库本体始终 <1MB。290MB 的二进制走 Release 资产，不进 git 历史、不用 LFS。
 
 ## 同步机制
 
@@ -74,7 +74,7 @@ git 仓库本体始终 <1MB——290MB 的二进制走 Release 资产，不进 g
 ### 体积参考
 
 每版本 8 平台 × ~290MB ≈ **2.3GB**。保留 8 版 ≈ 18GB；全量历史（~350 个版本）
-≈ **800GB**，请确认这是你想要的再改 `RETENTION=0`。
+≈ **800GB**。
 
 ## 常用操作
 
@@ -110,15 +110,15 @@ cd worker && wrangler deploy
 | `/claude-code-releases/<ver>/manifest.json` | Release 资产（缓存 1 天） |
 | `/claude-code-releases/<ver>/<platform>/claude(.exe)` | Release 资产，流式转发 |
 
-二进制不做边缘缓存：GitHub 下载会 302 到一次性签名 URL，缓存命中率不可靠，
-290MB 大对象走 Cache API 也有 clone 内存压力；直通转发 + 响应头
+二进制不做边缘缓存。GitHub 下载会 302 到一次性签名 URL，缓存命中率不可靠，
+290MB 的二进制走 Cache API 也有 clone 内存压力。直通转发 + 响应头
 `immutable`，客户端不会重复下载。
 
 ## 注意事项
 
 - 仓库必须 **public**：私有仓库的 Release 资产下载要鉴权，Worker 无法匿名代理
-- GitHub 会在仓库 60 天无提交后停用定时任务——每次版本更新都会自动提交
-  `channels/`，基本不会触发；长期没发版时手动跑一次即可
+- GitHub 会在仓库 60 天无提交后停用定时任务。每次版本更新都会自动提交
+  `channels/`，基本不会触发。长期没发版时手动跑一次即可
 - Actions cron 有排队延迟（几分钟到偶尔更久），镜像场景无所谓
 - Claude 程序内的自动更新仍走 `downloads.claude.ai` 原域名，本镜像覆盖
-  安装/重装场景；如需劫持更新可配合 hosts 或反代官方域名（自担风险）
+  安装/重装场景。如需劫持更新可配合 hosts 或反代官方域名（自担风险）
